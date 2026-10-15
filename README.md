@@ -52,10 +52,4 @@ cargo test
 cargo fmt --check
 ```
 
-## Signed release packages
-
-Pushing a version tag such as `v1.0.0` to GitHub runs the workflow in `.github/workflows/release.yml`. It builds Windows, macOS, and Linux packages containing the executable and layout data, creates a SHA-256 checksum file, and signs that checksum file using GitHub Actions OIDC with Sigstore keyless signing. The Sigstore bundle lets recipients verify the checksum/signature provenance; it does not claim an Authenticode/macOS code signature on the executable itself.
-
-To use this workflow, put the project in a GitHub repository, push the default branch, then push a version tag (`git tag v1.0.0 && git push origin v1.0.0`). The workflow creates the GitHub release and attaches packages plus checksums and the Sigstore bundle. No long-lived signing key is stored in the repository.
-
 The app uses Crossterm for portable terminal input. The Workman descriptor uses `qdrwbjfup; / ashtg yneoi / zxmcvkl,./`. Russian Phonetic uses a ChromeOS-style phonetic Cyrillic mapping as one example; phonetic layouts vary between operating systems, so set your OS to the matching variant for physical-key training.
