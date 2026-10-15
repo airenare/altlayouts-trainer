@@ -1,0 +1,8 @@
+# Russian phonetic example, following the ChromeOS Russian Phonetic key rows.
+id=russian-phonetic
+name=Russian Phonetic (ChromeOS-style)
+row=ю ч я в е р т ы у и о п ш щ э
+row=а с д ф г х й к л ; '
+row=з ь ц ж б н м , . /
+words=russian-words.csv
+stages=аоие|нт|ср|вл|км|пд|уя|ыб|зг|чь|йх|жш|эц|щю|ф|ъ|1|2|3|4|5|6|7|8|9|0|-|=|[|]|;|'|,|.|/|\\|!|@|#|$|%|^|&|*|(|)|_|+

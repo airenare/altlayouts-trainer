@@ -1,0 +1,7 @@
+id=dvorak
+name=Dvorak
+row=' , . p y f g c r l
+row=a o e u i d h t n s
+row=; q j k x b m w v z
+words=dvorak-words.csv
+stages=aoeuidhtns|py|f|g|c|r|l|b|k|m|j|x|q|z|w|v|1|2|3|4|5|6|7|8|9|0|-|=|[|]|;|'|,|.|/|\\|!|@|#|$|%|^|&|*|(|)|_|+

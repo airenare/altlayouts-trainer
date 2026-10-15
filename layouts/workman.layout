@@ -1,0 +1,7 @@
+id=workman
+name=Workman
+row=q d r w b j f u p ;
+row=a s h t g y n e o i
+row=z x m c v k l , . /
+words=workman-words.csv
+stages=ashtneoi|gb|dy|rw|f|u|p|j|l|z|x|m|c|v|q|k|1|2|3|4|5|6|7|8|9|0|-|=|[|]|;|'|,|.|/|\\|!|@|#|$|%|^|&|*|(|)|_|+

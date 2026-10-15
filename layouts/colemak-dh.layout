@@ -1,0 +1,7 @@
+id=colemak-dh
+name=Colemak-DH
+row=q w f p b j l u y ;
+row=a r s t g m n e i o
+row=z x c d v k h , . /
+words=colemak-dh-words.csv
+stages=arstneio|dh|u|y|f|g|c|v|b|q|j|p|k|l|m|w|x|z|1|2|3|4|5|6|7|8|9|0|-|=|[|]|;|'|,|.|/|\\|!|@|#|$|%|^|&|*|(|)|_|+

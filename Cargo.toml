@@ -1,0 +1,9 @@
+[package]
+name = "altlayouts-trainer"
+version = "0.1.0"
+edition = "2024"
+description = "A gradual, mistake-aware terminal typing trainer for alternative keyboard layouts"
+license = "MIT"
+
+[dependencies]
+crossterm = "0.28"

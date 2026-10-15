@@ -1,0 +1,80 @@
+name: Build and sign release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            extension: tar.gz
+          - os: macos-latest
+            extension: tar.gz
+          - os: windows-latest
+            extension: zip
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build release binary
+        run: cargo build --release --locked
+      - name: Package Unix release
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          mkdir -p package/altlayouts-trainer
+          cp target/release/altlayouts-trainer package/altlayouts-trainer/
+          cp -R layouts package/altlayouts-trainer/
+          cp README.md words.csv package/altlayouts-trainer/
+          tar -czf altlayouts-trainer-${{ runner.os }}.tar.gz -C package altlayouts-trainer
+      - name: Package Windows release
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force package/altlayouts-trainer | Out-Null
+          Copy-Item target/release/altlayouts-trainer.exe package/altlayouts-trainer/
+          Copy-Item layouts package/altlayouts-trainer/ -Recurse
+          Copy-Item README.md, words.csv package/altlayouts-trainer/
+          Compress-Archive -Path package/altlayouts-trainer -DestinationPath altlayouts-trainer-Windows.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ runner.os }}
+          path: altlayouts-trainer-${{ runner.os }}.${{ matrix.extension }}
+          if-no-files-found: error
+
+  publish:
+    name: Publish signed release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: release-*
+          merge-multiple: true
+      - name: Create checksums and sign with Sigstore
+        uses: sigstore/cosign-installer@v3
+      - name: Sign release artifacts
+        shell: bash
+        run: |
+          cd dist
+          sha256sum * > SHA256SUMS
+          cosign sign-blob --yes --bundle SHA256SUMS.sigstore.json SHA256SUMS
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --generate-notes --verify-tag
