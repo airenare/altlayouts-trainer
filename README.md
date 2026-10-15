@@ -43,7 +43,7 @@ words=my-words.csv
 stages=asdfjkl|q|w|e|r|t|y|u|i|o|p|z|x|c|v|b|n|m
 ```
 
-The app scans `.layout` files at startup, sorts valid layouts by display name, and shows validation errors for invalid files. IDs must be unique and use lowercase ASCII letters, digits, and hyphens. The main menu's `l` option cycles through the discovered list. No Rust source changes or recompilation are needed to add a layout.
+The `words=` field is required; it names a comma-delimited UTF-8 dictionary alongside the descriptor. The app scans `.layout` files at startup, sorts valid layouts by display name, and shows validation errors for invalid files. IDs must be unique and use lowercase ASCII letters, digits, and hyphens. The main menu's `l` option cycles through the discovered list. No Rust source changes or recompilation are needed to add a layout.
 
 ## Test
 

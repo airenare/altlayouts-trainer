@@ -35,7 +35,7 @@ jobs:
           mkdir -p package/altlayouts-trainer
           cp target/release/altlayouts-trainer package/altlayouts-trainer/
           cp -R layouts package/altlayouts-trainer/
-          cp README.md words.csv package/altlayouts-trainer/
+          cp README.md package/altlayouts-trainer/
           tar -czf altlayouts-trainer-${{ runner.os }}.tar.gz -C package altlayouts-trainer
       - name: Package Windows release
         if: runner.os == 'Windows'
@@ -44,7 +44,7 @@ jobs:
           New-Item -ItemType Directory -Force package/altlayouts-trainer | Out-Null
           Copy-Item target/release/altlayouts-trainer.exe package/altlayouts-trainer/
           Copy-Item layouts package/altlayouts-trainer/ -Recurse
-          Copy-Item README.md, words.csv package/altlayouts-trainer/
+          Copy-Item README.md package/altlayouts-trainer/
           Compress-Archive -Path package/altlayouts-trainer -DestinationPath altlayouts-trainer-Windows.zip
       - uses: actions/upload-artifact@v4
         with:

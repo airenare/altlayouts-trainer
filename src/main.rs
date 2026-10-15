@@ -17,7 +17,6 @@ const TIMED_EXERCISES: usize = 10;
 const WORD_STAGE: usize = 20;
 const SHOW_LAYOUT_THROUGH_STAGE: usize = 2;
 const LAYOUTS_DIR: &str = "layouts";
-const DEFAULT_WORDS_FILE: &str = "words.csv";
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Layout {
@@ -141,13 +140,14 @@ fn parse_layout_file(path: &Path) -> Result<Layout, String> {
             path.display()
         ));
     }
-    if let Some(words) = &words_file {
-        if Path::new(words).file_name().and_then(|part| part.to_str()) != Some(words.as_str()) {
-            return Err(format!(
-                "{}: words must be a filename in the layout directory",
-                path.display()
-            ));
-        }
+    let words = words_file
+        .as_ref()
+        .ok_or_else(|| format!("{}: missing words=<filename.csv>", path.display()))?;
+    if Path::new(words).file_name().and_then(|part| part.to_str()) != Some(words.as_str()) {
+        return Err(format!(
+            "{}: words must be a filename in the layout directory",
+            path.display()
+        ));
     }
 
     Ok(Layout {
@@ -220,7 +220,9 @@ fn load_selected_layout(layouts: &[Layout], path: &Path) -> usize {
 }
 
 fn load_words(layout: &Layout) -> Vec<String> {
-    let filename = layout.words_file.as_deref().unwrap_or(DEFAULT_WORDS_FILE);
+    let Some(filename) = layout.words_file.as_deref() else {
+        return Vec::new();
+    };
     let parent = layout.source.parent().unwrap_or_else(|| Path::new("."));
     let path = parent.join(filename);
     std::fs::read_to_string(path)
@@ -815,7 +817,7 @@ mod tests {
     #[test]
     fn descriptor_parser_accepts_unicode_and_exact_fifty_stages() {
         let mut text = String::from(
-            "id=test-ru\nname=Russian Phonetic\nrow=й ц у к\nrow=ф ы в а\nwords=words.csv\n",
+            "id=test-ru\nname=Russian Phonetic\nrow=й ц у к\nrow=ф ы в а\nwords=test-words.csv\n",
         );
         for index in 0..50 {
             let stage = if index == 0 { "фыва" } else { "й" };
@@ -838,7 +840,7 @@ mod tests {
             std::env::temp_dir().join(format!("altlayouts-compact-{}.layout", std::process::id()));
         std::fs::write(
             &path,
-            "id=compact\nname=Compact\nrow=a s d f\nstages=asdf|j|k|l\n",
+            "id=compact\nname=Compact\nrow=a s d f\nwords=words.csv\nstages=asdf|j|k|l\n",
         )
         .unwrap();
         let layout = parse_layout_file(&path).unwrap();
